@@ -319,4 +319,206 @@ window.undefined = window.undefined;
 		}
 	}
 	console.log(dumpObject({a:2,b:4,d:5,f:new Date()}));
+	
+	
+	function log(message)
+	{
+		var options,dump,con=Ext.global.console,
+			level = 'log',
+			indent = log.indent || 0,statck,out,max;
+			
+			log.indent = indent;
+			
+			if(Ext.type(message) !='string')
+			{
+				options = messages;
+				message = options.msg || '';
+				level = options.level || level;
+				dump = options.dump;
+				stack = options.stack;
+				
+				if(options.indent)
+				{
+					++ log.indent;
+				}
+				else if(options.outdent)
+				{
+					log.indent = indent = Math.max(indent - 1,0);
+				}
+				
+				if(dump && (con && con .dir))
+				{
+					message += dumpObject(dump);
+					dump = null;
+				}
+				
+				if(arguments.length >1)
+				{
+					message += Array.prototype.slice.call(arguments,1).join('');
+				}
+				
+				message = indent ? Ext.String.repeat(' ', log.indextSize * indent)+message : message;
+				
+				if(level !='log')
+				{
+					message = '[' + level.charAt(0).toUpperCase() + ']' + message;
+				}
+				
+				
+				if(con)
+				{
+					if(con[level])
+					{
+						con[level](message);
+					}
+					else
+					{
+						con.log(message);
+					}
+					
+					if(dummp)
+					{
+						con.dir(dump);
+					}
+					
+					if(stack && con.trace)
+					{
+						if(!con.firebug || level !='error')
+						{
+							con.trace();	
+						}
+					}
+				}else
+				{
+					if(Ext.isOpera)
+					{
+						opera.postError(message);	
+					}
+					else
+					{
+						out = log.out;
+						max = log.max;
+						
+						if(out.length >= max)
+						{
+							Ext.Array.erase(out,0,out.length -3 & Math.floor(max/4));	
+						}
+						out.push(message);
+					}
+				}
+			}
+			++log.count;
+			++log.counters[level];
+	}
+	
+	
+	function logx(level,args)
+	{
+		if(typeof args[0] == 'string')
+		{
+			args.unshift({});
+		}
+		
+		args[0].level = level;
+		log.apply(this,args);
+	}
+	
+	log.error = function()
+	{
+		logx('error',Array.prototype.slice.call(arguments));	
+	}
+	
+	log.info = function()
+	{
+		logx('info',Array.prototype.slice.call(arugments));	
+	}
+	
+	log.warn = funciton()
+	{
+		logx('warn',Array.prototype.slice.call(arguments));	
+	}
+	
+	log.count = 0;
+	
+	log.counters = {error :0,warn:0,info:0,log:0};
+	
+	log.identSize = 2;
+	
+	log.out = [];
+	
+	lag.max = 750;
+	
+	    log.show = function () {
+        window.open('','extlog').document.write([
+            '<html><head><script type="text/javascript">',
+                'var lastCount = 0;',
+                'function update () {',
+                    'var ext = window.opener.Ext,',
+                        'extlog = ext && ext.log;',
+                    'if (extlog && extlog.out && lastCount != extlog.count) {',
+                        'lastCount = extlog.count;',
+                        'var s = "<tt>" + extlog.out.join("~~~").replace(/[&]/g, "&amp;").replace(/[<]/g, "&lt;").replace(/[ ]/g, "&#160;").replace(/\\~\\~\\~/g, "<br/>") + "</tt>";',
+                        'document.body.innerHTML = s;',
+                    '}',
+                    'setTimeout(update, 1000);',
+                '}',
+                'setTimeout(update, 1000);',
+            '</script></head><body></body></html>'].join(''));
+    };
+	
+	nullLog = function(){};
+	nullLog.info = nullLog.warn = nummLog.error = Ext.emptyFn;
+	//update ext version
+	Ext.setVersion('extjs','4.2.1.883');
+	
+	Ext.apply(Ext,{
+		SSL_SECURE_URL : isSecure && isIE ? 'javascript:\'\'':'about:blank',
+		
+		plainTableCls:Ext.buildSettings.baseCSSPrefix +'table-plain',
+		
+		plainListCls:Ext.buildSettings.baseCSSPrefix +'list-plain',
+		
+		enableNestedListenerRemoval:false,
+		
+		USE_NATIVE_JSON:false,
+		
+		getDom:function(el,strict)
+		{
+			if(!el || !document)
+			{
+				return null;
+			}
+			
+			if(el.dom)
+			{
+				return el.dom;
+			}
+			else
+			{
+				if(Ext.type(el) == 'string')
+				{
+					var e = Ext.getElementById(el);
+					
+					if(e && isIE && strict)
+					{
+						if(el == e.getAttribute('id'))
+						{
+							return e;
+						}
+						else
+						{
+							return null;
+						}
+					}
+					
+					return e;
+				}
+				else
+				{
+					return el;
+				}
+			}
+		}
+	});
+	
 }());
