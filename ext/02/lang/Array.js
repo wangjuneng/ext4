@@ -173,6 +173,10 @@
 			}
 	}
 	
+	 function spliceNative (array) {
+        return array.splice.apply(array, slice.call(arguments, 1));
+    }
+	
 	erase = supportsSplice ? eraseNative :eraseSim;
 	replace = supportsSplice ? replaceNative : replaceSim;
 	splice = supportsSplice ? spliceNative : repliceSim;
@@ -283,7 +287,7 @@
 			return ret;
 		},
 		//map 数组遍历
-		map:suportsMap ?function(array,fn,scope){
+		map:supportsMap ?function(array,fn,scope){
 			if(!fn)
 			{
 				Ext.Error.raise('map have a callback');
@@ -332,7 +336,7 @@
             return true;
 		},
 		//直接有一个item 返回true 则返回true
-		some:supprotsSome ? function(array,fn,scope){
+		some:supportsSome ? function(array,fn,scope){
 			 if (!fn) {
                 Ext.Error.raise('Ext.Array.some must have a callback function passed as second argument.');
             }
@@ -787,7 +791,7 @@
 			}
 		},
 		_replaceSim :replaceSim,
-		_repliceSim : repliceSim,
+		_repliceSim : spliceSim,
 		erase:erase,
 		insert:function(array,index,items)
 		{
