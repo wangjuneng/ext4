@@ -952,7 +952,7 @@ window.undefined = window.undefined;
 				v = arr[a];
 				if(v && typeof v[methodName]=='function')
 				{
-					ret.push(v[methodName.apply(v,args));
+					ret.push(v[methodName].apply(v,args));
 				}
 				else
 				{
@@ -967,8 +967,8 @@ window.undefined = window.undefined;
 		{
 			var parts = Ext.partition(arguments,function(val){return typeof val!='function';}),
 			arrs = parts[0],
-			fn:parts[1][0],
-			len:Ext.max(Ext.pluck(arrs,'length')),
+			fn=parts[1][0],
+			len=Ext.max(Ext.pluck(arrs,'length')),
 			ret = [],i,j,aLen;
 			
 			for(i=0;i<len;i++)
